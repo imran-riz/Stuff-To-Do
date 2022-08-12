@@ -2,7 +2,10 @@
 
 This is a task management application. 
 
-Users can manage their tasks on their computers and set up reminders to alert them of the task to be done. 
+Some of the key functionalities of this project are:
+- Setting up reminders to send alerts 
+- Allowing the task to be repeated DAILY, WEEKLY or MONTHLY.
+- Editing the details of a task.
 
 ## **Copyright 2022** by [Imran R.](https://github.com/imran-2003)
 
