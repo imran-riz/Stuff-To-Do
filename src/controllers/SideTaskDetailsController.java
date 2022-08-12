@@ -156,6 +156,7 @@ public class SideTaskDetailsController {
             this.task.setNotes(notes);
 
             TaskCollection.getInstance().storeTasksToFile();
+            HomePageController.loadTasksToListView();
         }
     }
 }
