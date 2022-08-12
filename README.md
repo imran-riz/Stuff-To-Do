@@ -7,9 +7,9 @@ Some of the key functionalities of this application are:
 - Allowing the task to be repeated DAILY, WEEKLY or MONTHLY.
 - Editing the details of a task.
 
-![](https://github.com/imran-2003/Stuff-To-Do/blob/main/screenshots/1.png)
+![](https://github.com/imran-2003/Stuff-To-Do/blob/main/Screenshots/1.png)
 
-![](https://github.com/imran-2003/Stuff-To-Do/blob/main/screenshots/2.png)
+![](https://github.com/imran-2003/Stuff-To-Do/blob/main/Screenshots/2.png)
 
 I used [OpenJDK 17](https://openjdk.org/projects/jdk/17/) and [JavaFX 11](https://openjfx.io/) to build this application.
 
