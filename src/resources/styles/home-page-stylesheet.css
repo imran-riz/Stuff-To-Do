@@ -1,0 +1,261 @@
+@font-face {
+    font-family: 'Satisfy' ;
+    src: url('../fonts/Satisfy-Regular.ttf') ;
+}
+
+@font-face {
+    font-family: 'Source Sans Pro' ;
+    src: url('../fonts/SourceSansPro-Regular.ttf') ;
+}
+
+
+#sideMenu {
+    -fx-background-color: black;
+}
+
+#sideMenu .label {
+    -fx-font-family: 'Satisfy' ;
+    -fx-font-size: 36px;
+    -fx-text-fill: white ;
+}
+
+#sideMenu .button {
+    -fx-background-color: #181818 ;
+    -fx-font-family: 'Source Sans Pro' ;
+    -fx-text-fill: white;
+}
+
+#sideMenu .button:hover {
+    -fx-background-color: #00FFCB ;
+    -fx-text-fill: black ;
+}
+
+#sideMenuOptionBtn {
+    -fx-font-size: 17px;
+}
+
+#aboutBtn {
+    -fx-font-size: 14px;
+}
+
+#centerAnchorPane {
+    -fx-background-color: #181818;
+}
+
+#header {
+    -fx-font-family: 'Source Sans Pro' ;
+    -fx-font-size: 28px;
+    -fx-text-fill: #00FFCB ;
+}
+
+#tasksListView {
+    -fx-background-color: transparent ;
+}
+
+#tasksListView .cell {
+    -fx-background-color: transparent ;
+}
+
+#tasksListView .cell:empty {
+    -fx-background-color: transparent ;
+}
+
+#detailsPane {
+    -fx-background-color: black ;
+}
+
+#closeBtn {
+    -fx-background-color: #00FFCB ;
+}
+
+
+
+/* <<<<<<<<<<<<<<<<<<<<<< Styling for task-box.fxml >>>>>>>>>>>>>>>>>>>>>>>>>>> */
+#taskBoxRoot {
+    -fx-background-color: #0eedbb;
+    -fx-background-radius: 8 ;
+}
+
+#taskBoxRoot:hover {
+    -fx-background-color: #00FFCB;
+}
+
+#taskBoxRoot .button {
+    -fx-background-color: red ;
+}
+
+#taskBoxRoot .label {
+    -fx-font-family: 'Source Sans Pro' ;
+    -fx-text-fill: black ;
+}
+
+#taskText {
+    -fx-font-size: 18px;
+}
+
+#dueDate {
+    -fx-font-size: 14px;
+}
+
+.check-box .box {
+    -fx-background-color: white ;
+    -fx-background-radius: 10 ;
+}
+
+
+
+/* <<<<<<<<<<<<<< Styling for new-task-form-large.fxml and new-task-form-small.fxml >>>>>>>>>>>>>>>>>>> */
+#newTaskRoot {
+    -fx-background-color: #0A0A0A ;
+    -fx-background-radius: 8 ;
+}
+
+#newTaskRoot .label {
+    -fx-font-family: 'Source Sans Pro' ;
+    -fx-font-size: 15px;
+    -fx-text-fill: white ;
+}
+
+#newTaskRoot .text-field {
+    -fx-background-color: #292929 ;
+    -fx-border-color: #292929 ;
+    -fx-font-size: 16px ;
+    -fx-text-fill: white;
+}
+
+#newTaskRoot .button {
+    -fx-background-color: #00FFCB ;
+    -fx-font-weight: bold ;
+    -fx-font-size: 18px ;
+}
+
+
+
+/* <<<<<<<<<<<<<<<<<<<<<< Styling for side-task-details.fxml >>>>>>>>>>>>>>>>>>>>>>>>>>> */
+#taskDetailsRoot {
+    -fx-background-color: black ;
+}
+
+#miniContentBox {
+    -fx-background-color: #181818 ;
+}
+
+#taskDetailsRoot .label {
+    -fx-font-family: 'Source Sans Pro' ;
+    -fx-font-size: 15px;
+    -fx-text-fill: white ;
+}
+
+#taskDetailsRoot .button {
+    -fx-background-color: #00FFCB ;
+    -fx-font-family: 'Source Sans Pro' ;
+    -fx-font-size: 14px;
+    -fx-text-fill: black ;
+}
+
+#taskDetailsRoot .text-field {
+    -fx-background-color: #292929 ;
+    -fx-border-color: #292929 ;
+    -fx-text-fill: white;
+}
+
+#taskDetailsRoot .text-area {
+    -fx-text-fill: white ;
+}
+
+#taskDetailsRoot .text-area .content {
+    -fx-background-color: #292929 ;
+}
+
+#taskNotesTextArea {
+    -fx-font-size: 14px ;
+}
+
+#taskTextArea {
+    -fx-font-size: 18px ;
+}
+
+
+
+/* <<<<<<<<<<<<<<<<<<<<<< COMMON styling for both side-task-details.fxml and new-task-form >>>>>>>>>>>>>>>>>>>>>>>>>>> */
+.calendar-grid {
+    -fx-background-color: #181818 ;
+}
+
+.date-picker .arrow-button {
+  -fx-background-color: black ;
+  -fx-border-color: #292929 ;
+  -fx-background-radius: 0;
+}
+
+.date-picker .arrow-button:hover {
+  -fx-background-color: #00FFCB ;
+}
+
+.date-picker .arrow-button .arrow {
+  -fx-background-color: white;
+}
+
+.date-picker .cell {
+  -fx-background-color: black;
+  -fx-border-color: black ;
+  -fx-text-fill: white ;
+}
+
+.date-picker .cell:hover {
+  -fx-background-color: #00FFCB;
+  -fx-text-fill: black ;
+}
+
+.date-picker .cell:focused {
+  -fx-background-color: #00FFCB;
+  -fx-text-fill: black ;
+}
+
+.date-picker .selected {
+  -fx-background-color: #00FFCB;
+  -fx-text-fill: black;
+}
+
+.date-picker-popup {
+  -fx-background-color: black ;
+  -fx-border-color: black;
+}
+
+.date-picker-popup .month-year-pane {
+  -fx-background-color: black;
+  -fx-text-fill: black ;
+}
+
+.date-picker-popup .month-year-pane .label {
+  -fx-text-fill: black;
+}
+
+.date-picker-popup .week-number-cell {
+  -fx-text-fill: white;
+}
+
+.combo-box-base {
+    -fx-background-color: #292929;
+    -fx-text-fill: white ;
+    -fx-padding: 0;
+    -fx-mark-color: #00FFCB ;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: white;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: black;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: white ;
+    -fx-background-color: black;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: #00FFCB;
+    -fx-text-fill: black;
+}
