@@ -137,9 +137,10 @@ public class SideTaskDetailsController {
         int min = Integer.parseInt(strMin);
 
         if (dayPeriod.equalsIgnoreCase("PM")) {
-            hr += 12;
-
-            if (hr == 24) hr = 0;
+            if (hr != 12)   hr += 12;
+        }
+        else if (hr == 12) {
+            hr = 0;
         }
 
         LocalTime reminderTime = LocalTime.of(hr, min);
