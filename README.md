@@ -11,7 +11,7 @@ Some of the key functionalities of this application are:
 - Allowing the task to be repeated DAILY, WEEKLY or MONTHLY.
 - Editing the details of a task.
 
-I used [OpenJDK 17](https://openjdk.org/projects/jdk/17/) and [JavaFX 11](https://openjfx.io/) to build this application.
+I used [OpenJDK 11](https://openjdk.org/projects/jdk/17/) and [JavaFX 11](https://openjfx.io/) to build this application.
 
 ## **Copyright 2022** by [Imran R.](https://github.com/imran-2003)
 
