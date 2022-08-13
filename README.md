@@ -11,7 +11,7 @@ Some of the key functionalities of this application are:
 
 ![](https://github.com/imran-2003/Stuff-To-Do/blob/main/Screenshots/2.png)
 
-I used [OpenJDK 17](https://openjdk.org/projects/jdk/17/) and [JavaFX 11](https://openjfx.io/) to build this application.
+I used [OpenJDK 11](https://openjdk.org/projects/jdk/11/) and [JavaFX 11](https://openjfx.io/) to build this application.
 
 
 ## **Copyright 2022** by [Imran R.](https://github.com/imran-2003)
