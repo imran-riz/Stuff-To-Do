@@ -13,6 +13,8 @@ Some of the key functionalities of this application are:
 
 I used [OpenJDK 11](https://openjdk.org/projects/jdk/11/) and [JavaFX 11](https://openjfx.io/) to build this application.
 
+Download the [Windows installer](https://drive.google.com/file/d/1JJrbVPKKOypgxx8KGubL9NdPspt1FOw0/view?usp=sharing).
+
 
 ## **Copyright 2022** by [Imran R.](https://github.com/imran-2003)
 
