@@ -1,4 +1,4 @@
-# Stuff-To-Do v1.0.0
+# Stuff-To-Do v1.0.1
 
 This is a task management application that I made for PCs.
 
