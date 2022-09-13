@@ -15,6 +15,8 @@ I used [OpenJDK 11](https://openjdk.org/projects/jdk/11/) and [JavaFX 11](https:
 
 Download the [Windows installer](https://drive.google.com/file/d/1JJrbVPKKOypgxx8KGubL9NdPspt1FOw0/view?usp=sharing).
 
+## Updates made
+- The application's window can now be resized.
 
 ## **Copyright 2022** by [Imran R.](https://github.com/imran-2003)
 
