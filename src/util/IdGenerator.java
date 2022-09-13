@@ -17,7 +17,7 @@
 
 package util;
 
-import models.Task;
+import models.TaskToDo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +29,11 @@ public class IdGenerator {
         return getFirstLtrsForId().concat("00000") ;
     }
 
-    public static String generateIdForRepeatedTask(Task task) {
+    public static String generateIdForRepeatedTask(TaskToDo taskToDo) {
         String id, idDigits ;
         int n ;
 
-        n = Integer.parseInt(task.getId().substring(4, 9)) + 1;
+        n = Integer.parseInt(taskToDo.getId().substring(4, 9)) + 1;
 
         if (n < 10) {
             idDigits = "0000".concat(Integer.toString(n));
@@ -51,7 +51,7 @@ public class IdGenerator {
             idDigits = Integer.toString(n) ;
         }
 
-        id = task.getId().substring(0, 4).concat(idDigits);
+        id = taskToDo.getId().substring(0, 4).concat(idDigits);
 
         return id ;
     }
@@ -61,7 +61,7 @@ public class IdGenerator {
         String newIdLtrs = "" ;
         Random random = new Random() ;
 
-        List<Task> listOfTasks = TaskCollection.getInstance().getAllTasks() ;
+        List<TaskToDo> listOfTasks = TaskCollection.getInstance().getAllTasks() ;
         List<String> listOfIds = new ArrayList<>() ;
 
         for (int i = 0; i < listOfTasks.size(); i++) {
@@ -79,7 +79,7 @@ public class IdGenerator {
 
         do {
             for (int x = 0; x < 4 ; x++) {
-                int n = random.nextInt(65, 91) ;
+                int n = random.nextInt(91-65) + 65 ;
                 newIdLtrs = newIdLtrs.concat(Character.toString((char) n)) ;
             }
         }

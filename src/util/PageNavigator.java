@@ -43,9 +43,9 @@ public class PageNavigator {
     public static void activatePage(String pageName) {
         Page page = getPage(pageName) ;
 
-        mainScene.setRoot(page.pane()) ;
+        mainScene.setRoot(page.getPane()) ;
         mainScene.getStylesheets().clear() ;
-        mainScene.getStylesheets().add(page.pathToStylesheet()) ;
+        mainScene.getStylesheets().add(page.getPathToStylesheet()) ;
     }
 
     public static Page getPage(String pageName) {

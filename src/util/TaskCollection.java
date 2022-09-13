@@ -17,7 +17,7 @@
 
 package util;
 
-import models.Task;
+import models.TaskToDo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class TaskCollection {
@@ -34,7 +35,7 @@ public class TaskCollection {
     private final String PATH_TO_DIRECTORY = System.getProperty("user.home") + "\\.stuff-to-do-app" ;
     private final String PATH_TO_FILE = PATH_TO_DIRECTORY + "/tasks-info.ser" ;
 
-    private List<Task> listOfTasks = new ArrayList<>() ;
+    private List<TaskToDo> listOfTasks = new ArrayList<>() ;
 
 
     private TaskCollection() {}
@@ -44,21 +45,21 @@ public class TaskCollection {
         return instance ;
     }
 
-    public  List<Task> getAllTasks() {
+    public  List<TaskToDo> getAllTasks() {
         return this.listOfTasks ;
     }
 
-    public void addTask(Task task) {
-        this.listOfTasks.add(task) ;
+    public void addTask(TaskToDo taskToDo) {
+        this.listOfTasks.add(taskToDo) ;
         this.storeTasksToFile() ;
     }
 
-    public void removeTask(Task task) {
-        this.listOfTasks.remove(task) ;
+    public void removeTask(TaskToDo taskToDo) {
+        this.listOfTasks.remove(taskToDo) ;
         this.storeTasksToFile() ;
     }
 
-    public Task getTask(String id) {
+    public TaskToDo getTask(String id) {
         return this.listOfTasks.stream()
                 .filter(task -> id.equalsIgnoreCase(task.getId()))
                 .findAny()
@@ -66,14 +67,14 @@ public class TaskCollection {
     }
 
 
-    public List<Task> getAllTasksThatRepeat(Task task) {
-        List<Task> taskList = new ArrayList<>(this.listOfTasks);
+    public List<TaskToDo> getAllTasksThatRepeat(TaskToDo taskToDo) {
+        List<TaskToDo> taskList = new ArrayList<>(this.listOfTasks);
 
         taskList.sort(Comparator.comparing(t -> t.getDueDate()));
 
         taskList = taskList.stream()
-                    .filter(task1 -> task1.getId().substring(0, 4).equalsIgnoreCase(task.getId().substring(0, 4)))
-                    .toList();
+                    .filter(task1 -> task1.getId().substring(0, 4).equalsIgnoreCase(taskToDo.getId().substring(0, 4)))
+                    .collect(Collectors.toList());
 
         return taskList ;
     }

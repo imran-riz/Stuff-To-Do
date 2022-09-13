@@ -93,7 +93,7 @@
     -fx-font-size: 18px;
 }
 
-#dueDate {
+#taskDueDateText, #taskReminderText, #taskRepeatText {
     -fx-font-size: 14px;
 }
 
@@ -112,7 +112,7 @@
 
 #newTaskRoot .label {
     -fx-font-family: 'Source Sans Pro' ;
-    -fx-font-size: 15px;
+    -fx-font-size: 14px;
     -fx-text-fill: white ;
 }
 
@@ -126,7 +126,6 @@
 #newTaskRoot .button {
     -fx-background-color: #00FFCB ;
     -fx-font-weight: bold ;
-    -fx-font-size: 18px ;
 }
 
 

@@ -24,10 +24,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import models.Task;
+import javafx.scene.layout.*;
+import models.TaskToDo;
 import util.PageNavigator;
 import util.TaskCollection;
 import values.HomePageHeaders;
@@ -39,28 +37,26 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 public class HomePageController implements Initializable {
 
     public AnchorPane root, sideMenuAnchorPane, centerAnchorPane, detailsPane;
+    public VBox centerVBox;
     public BorderPane borderPane;
     public Label welcomeLbl, headerLbl ;
-    public Button aboutBtn, todayTasksBtn, plannedTasksBtn, completedTasksBtn, closeBtn;
-
-    private FXMLLoader loader ;
-    private AnchorPane newTaskFormRoot ;
-    private NewTaskFormController newTaskFormController ;
+    public Button aboutBtn, todayTasksBtn, plannedTasksBtn, completedTasksBtn ;
 
     public static final StringProperty headerStrProperty = new SimpleStringProperty();
 
     private static final ListView<Pane> tasksListView = new ListView<>() ;
 
-    public static final List<Task> tasksToday = new ArrayList<>() ;            // stores the Tasks for the present day
-    public static final List<Task> allPlannedTasks = new ArrayList<>() ;       // stores all the planned tasks to do that are not complete
+    public static final List<TaskToDo> TASKS_TODAY = new ArrayList<>() ;            // stores the Tasks for the present day
+    public static final List<TaskToDo> ALL_PLANNED_TASKS = new ArrayList<>() ;      // stores all the planned tasks to do that are not complete
 
     private static final LocalDate TODAY_DATE = LocalDate.now() ;
-    private static Task selectedTask;
+    private static TaskToDo selectedTaskToDo;
 
 
     @Override
@@ -69,8 +65,10 @@ public class HomePageController implements Initializable {
 
         headerStrProperty.setValue(HomePageHeaders.TASKS_TODAY) ;
 
+        initializeDetailsPane();
+
         this.todayTasksBtn.setOnAction(e -> {
-            if (selectedTask != null) {
+            if (selectedTaskToDo != null) {
                 hideTaskDetails();
             }
 
@@ -78,7 +76,7 @@ public class HomePageController implements Initializable {
         });
 
         this.plannedTasksBtn.setOnAction(e -> {
-            if (selectedTask != null) {
+            if (selectedTaskToDo != null) {
                 hideTaskDetails();
             }
 
@@ -86,7 +84,7 @@ public class HomePageController implements Initializable {
         });
 
         this.completedTasksBtn.setOnAction(e -> {
-            if (selectedTask != null) {
+            if (selectedTaskToDo != null) {
                 hideTaskDetails();
             }
 
@@ -95,92 +93,44 @@ public class HomePageController implements Initializable {
 
         this.aboutBtn.setOnAction(e -> this.showAboutPage());
 
-        this.closeBtn.setOnAction(e -> this.hideTaskDetails());
 
-
-        // include the ListView to the app
-        AnchorPane.setLeftAnchor(tasksListView, 5.0);
-        AnchorPane.setRightAnchor(tasksListView, 5.0);
-        AnchorPane.setTopAnchor(tasksListView, 110.0);
-
-        tasksListView.setPrefWidth(520.0);
-        tasksListView.setPrefHeight(392.0);
-
+        // include the ListView that displays the tasks to the home page
         loadTasksToListView();
-
-        this.centerAnchorPane.getChildren().add(tasksListView) ;
-
-
-        // This is done to make the app responsive. When the side view containing the selected task's details is shown,
-        // the appropriate new-task-form is loaded to fit the available space in the center of the border pane.
-        this.centerAnchorPane.widthProperty().addListener(e -> {
-            double currentWidth = this.centerAnchorPane.getWidth();
-
-            if (currentWidth < 530) {
-                this.loader = new FXMLLoader(getClass().getResource("/resources/fxml/new-task-form-small.fxml"));
-            }
-            else {
-                this.loader = new FXMLLoader(getClass().getResource("/resources/fxml/new-task-form-large.fxml"));
-            }
-
-            try {
-                this.centerAnchorPane.getChildren().remove(newTaskFormRoot) ;
-
-                this.newTaskFormRoot = this.loader.load();
-
-                this.newTaskFormController = this.loader.getController() ;
-
-                AnchorPane.setLeftAnchor(this.newTaskFormRoot, 5.0) ;
-                AnchorPane.setBottomAnchor(this.newTaskFormRoot, 10.0) ;
-                AnchorPane.setRightAnchor(this.newTaskFormRoot, 5.0) ;
-
-                this.centerAnchorPane.getChildren().add(this.newTaskFormRoot) ;
-
-                this.newTaskFormController.initializeComponents();
-            }
-            catch (IOException ioEx) {
-                System.out.println("\nERROR: HomePageController.initialize() -> exception when loading the new task form.");
-                ioEx.printStackTrace() ;
-            }
-        });
-
+        this.centerVBox.setFillWidth(true);
+        this.centerVBox.getChildren().add(tasksListView);
+        VBox.setVgrow(tasksListView, Priority.ALWAYS);
 
         tasksListView.setOnMouseClicked(e -> {
             if (!tasksListView.getItems().isEmpty()) {
-                String selectedTaskId = ((Label) tasksListView.getSelectionModel().getSelectedItem().getChildren().get(0)).getText();
+                if (tasksListView.getSelectionModel().getSelectedItem() != null) {
+                    String selectedTaskId = ((Label) tasksListView.getSelectionModel().getSelectedItem().getChildren().get(0)).getText();
 
-                if (TaskCollection.getInstance().getTask(selectedTaskId) == selectedTask) {
-                    this.hideTaskDetails();
-                }
-                else {
-                    selectedTask = TaskCollection.getInstance().getTask(selectedTaskId);
-                    this.showTaskDetails();
+                    if (TaskCollection.getInstance().getTask(selectedTaskId) == selectedTaskToDo) {
+                        this.hideTaskDetails();
+                    }
+                    else {
+                        selectedTaskToDo = TaskCollection.getInstance().getTask(selectedTaskId);
+                        this.showTaskDetails();
+                    }
                 }
             }
         });
-
 
 
         // load the fxml file with the AnchorPane containing components to add a new task
         try {
-            this.loader = new FXMLLoader(getClass().getResource("/resources/fxml/new-task-form-large.fxml"));
-            this.newTaskFormRoot = this.loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/new-task-form.fxml"));
+            Pane newTaskFormRoot = loader.load();
 
-            AnchorPane.setLeftAnchor(this.newTaskFormRoot, 5.0) ;
-            AnchorPane.setBottomAnchor(this.newTaskFormRoot, 10.0) ;
-            AnchorPane.setRightAnchor(this.newTaskFormRoot, 5.0) ;
+            NewTaskFormController newTaskFormController = loader.getController();
 
-            this.newTaskFormController = this.loader.getController() ;
+            this.centerVBox.getChildren().add(newTaskFormRoot) ;
 
-            this.centerAnchorPane.getChildren().add(this.newTaskFormRoot) ;
-
-            this.newTaskFormController.initializeComponents();
+            newTaskFormController.initializeComponents();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-
-        this.borderPane.setRight(null);
 
         this.sideMenuAnchorPane.setId("sideMenu");
         this.centerAnchorPane.setId("centerAnchorPane");
@@ -191,7 +141,6 @@ public class HomePageController implements Initializable {
         this.completedTasksBtn.setId("sideMenuOptionBtn");
         this.aboutBtn.setId("aboutBtn");
         this.detailsPane.setId("detailsPane");
-        this.closeBtn.setId("closeBtn");
     }
 
 
@@ -216,26 +165,45 @@ public class HomePageController implements Initializable {
      * Loads the Tasks to the Lists 'allPlannedTasks' and 'tasksToday'
      */
     private static void initializeTaskLists() {
-        List<Task> taskList = TaskCollection.getInstance().getAllTasks() ;
+        List<TaskToDo> taskList = TaskCollection.getInstance().getAllTasks() ;
         taskList.sort(Comparator.comparing(task -> task.getDueDate()));
 
-        allPlannedTasks.clear();
-        tasksToday.clear();
+        ALL_PLANNED_TASKS.clear();
+        TASKS_TODAY.clear();
 
-        for (Task task: taskList) {
-            if (task.getCompleted()) {
-                if (task.getDueDate().equals(TODAY_DATE) || task.getDueDate().isAfter(TODAY_DATE)) {
-                    allPlannedTasks.add(task) ;
+        for (TaskToDo taskToDo : taskList) {
+            if (taskToDo.getCompleted()) {
+                if (taskToDo.getDueDate().equals(TODAY_DATE) || taskToDo.getDueDate().isAfter(TODAY_DATE)) {
+                    ALL_PLANNED_TASKS.add(taskToDo) ;
                 }
             }
             else {
-                allPlannedTasks.add(task);
+                ALL_PLANNED_TASKS.add(taskToDo);
             }
         }
 
-        tasksToday.addAll(taskList.stream()
+        TASKS_TODAY.addAll(taskList.stream()
                                 .filter(task -> task.getDueDate().equals(TODAY_DATE))
-                                .toList()) ;
+                                .collect(Collectors.toList())) ;
+    }
+
+
+    private void initializeDetailsPane() {
+        Button closeBtn;
+
+        this.detailsPane = new AnchorPane();
+        this.detailsPane.setPrefWidth(250);
+        this.detailsPane.setPrefHeight(600);
+        
+        closeBtn = new Button("X");
+        closeBtn.setPrefWidth(25);
+        closeBtn.setPrefHeight(25);
+        closeBtn.setId("closeBtn");
+        closeBtn.setOnAction(e -> this.hideTaskDetails());
+        AnchorPane.setTopAnchor(closeBtn, 10.0);
+        AnchorPane.setRightAnchor(closeBtn, 10.0);
+
+        this.detailsPane.getChildren().add(closeBtn);
     }
 
 
@@ -247,19 +215,18 @@ public class HomePageController implements Initializable {
 
         tasksListView.getItems().clear() ;
 
-        for (Task task : tasksToday) {
+        for (TaskToDo taskToDo : TASKS_TODAY) {
             try {
                 FXMLLoader loader = new FXMLLoader(HomePageController.class.getResource("/resources/fxml/task-box.fxml"));
 
                 tasksListView.getItems().add(loader.load());
 
                 TaskBoxController taskBoxController = loader.getController();
-                taskBoxController.initialize(task);
+                taskBoxController.initialize(taskToDo);
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
 
@@ -268,20 +235,20 @@ public class HomePageController implements Initializable {
      * Displays all the tasks that have been planned and yet to be completed in the home page's list view
      */
     private static void showAllPlannedTasks()  {
-        allPlannedTasks.sort(Comparator.comparing(task -> task.getDueDate()));
+        ALL_PLANNED_TASKS.sort(Comparator.comparing(task -> task.getDueDate()));
 
         headerStrProperty.setValue(HomePageHeaders.PLANNED_TASKS) ;
 
         tasksListView.getItems().clear() ;
 
-        for (Task task : allPlannedTasks) {
+        for (TaskToDo taskToDo : ALL_PLANNED_TASKS) {
             try {
                 FXMLLoader loader = new FXMLLoader(HomePageController.class.getResource("/resources/fxml/task-box.fxml"));
 
                 tasksListView.getItems().add(loader.load());
 
                 TaskBoxController taskBoxController = loader.getController();
-                taskBoxController.initialize(task);
+                taskBoxController.initialize(taskToDo);
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
@@ -294,25 +261,24 @@ public class HomePageController implements Initializable {
      *  Displays all the Tasks that have been completed
      */
     private static void showCompletedTasks() {
-        List<Task> tasksCompletedList = TaskCollection.getInstance().getAllTasks().stream().filter(task -> task.getCompleted()).toList() ;
+        List<TaskToDo> tasksCompletedList = TaskCollection.getInstance().getAllTasks().stream().filter(task -> task.getCompleted()).collect(Collectors.toList()) ;
 
         headerStrProperty.setValue(HomePageHeaders.COMPLETED_TASKS) ;
 
         tasksListView.getItems().clear() ;
 
-        for (Task task : tasksCompletedList) {
+        for (TaskToDo taskToDo : tasksCompletedList) {
             try {
                 FXMLLoader loader = new FXMLLoader(HomePageController.class.getResource("/resources/fxml/task-box.fxml"));
 
                 tasksListView.getItems().add(loader.load());
 
                 TaskBoxController taskBoxController = loader.getController();
-                taskBoxController.initialize(task);
+                taskBoxController.initialize(taskToDo);
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
 
@@ -324,25 +290,25 @@ public class HomePageController implements Initializable {
      */
     private void showTaskDetails() {
         AnchorPane sideDetailsAnchorPane ;
-        FXMLLoader loader = new FXMLLoader(HomePageController.class.getResource("/resources/fxml/side-task-details.fxml"));
+        FXMLLoader loader ;
 
         try {
+            loader = new FXMLLoader(HomePageController.class.getResource("/resources/fxml/side-task-details.fxml"));
+
             sideDetailsAnchorPane = loader.load();
             AnchorPane.setTopAnchor(sideDetailsAnchorPane, 40.0);
 
             this.detailsPane.getChildren().add(sideDetailsAnchorPane) ;
 
-            this.borderPane.setRight(this.detailsPane) ;
-
             SideTaskDetailsController sideTaskDetailsController = loader.getController() ;
-            sideTaskDetailsController.initialize(selectedTask);
-
+            sideTaskDetailsController.initialize(selectedTaskToDo);
         }
         catch (Exception e) {
             System.out.println("\nERROR: HomePageController.showTaskDetails() ->");
             e.printStackTrace();
         }
 
+        this.borderPane.setRight(this.detailsPane);
     }
 
 
@@ -351,7 +317,7 @@ public class HomePageController implements Initializable {
      */
     private void hideTaskDetails() {
         this.borderPane.setRight(null) ;
-        selectedTask = null ;
+        selectedTaskToDo = null ;
     }
 
 
@@ -366,19 +332,22 @@ public class HomePageController implements Initializable {
     /**
      * Used to add a new task to the Lists
      * The new task will then be displayed in the appropriate ListView depending on which tasks are being shown
-     * @param task the new Task that was created
+     * @param taskToDo the new Task that was created
      */
-    public static void addNewTask(Task task) {
-        allPlannedTasks.add(task) ;
+    public static void addNewTask(TaskToDo taskToDo) {
+        ALL_PLANNED_TASKS.add(taskToDo) ;
 
-        if (task.getDueDate().equals(TODAY_DATE)) {
-            tasksToday.add(task) ;
+        if (taskToDo.getDueDate().equals(TODAY_DATE)) {
+            TASKS_TODAY.add(taskToDo) ;
         }
 
         switch (headerStrProperty.getValue()) {
-            case HomePageHeaders.TASKS_TODAY -> showTasksForToday();
-            case HomePageHeaders.PLANNED_TASKS -> showAllPlannedTasks();
-            case HomePageHeaders.COMPLETED_TASKS -> showCompletedTasks();
+            case HomePageHeaders.TASKS_TODAY: showTasksForToday();
+                                                break;
+            case HomePageHeaders.PLANNED_TASKS: showAllPlannedTasks();
+                                                break;
+            case HomePageHeaders.COMPLETED_TASKS: showCompletedTasks();
+                                                break;
         }
     }
 
@@ -387,11 +356,11 @@ public class HomePageController implements Initializable {
      * Used to remove the root pane in TaskBox that corresponds to the Task the user has chosen to delete from the ListView
      * This is called from TaskBoxController.java
      * @param taskBoxRoot the root pane of the TaskBox
-     * @param task the Task to be removed
+     * @param taskToDo the Task to be removed
      */
-    public static void removeTaskBox(AnchorPane taskBoxRoot, Task task) {
-        allPlannedTasks.remove(task);
-        tasksToday.remove(task);
+    public static void removeTaskBox(AnchorPane taskBoxRoot, TaskToDo taskToDo) {
+        ALL_PLANNED_TASKS.remove(taskToDo);
+        TASKS_TODAY.remove(taskToDo);
 
         tasksListView.getItems().remove(taskBoxRoot) ;
     }

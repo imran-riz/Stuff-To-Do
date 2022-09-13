@@ -26,7 +26,7 @@
 
 <AnchorPane fx:id="root" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AboutPageController">
    <Button fx:id="backBtn" layoutX="40.0" layoutY="36.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#goBack" prefHeight="50.0" prefWidth="50.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
-   <Label fx:id="headerLbl" alignment="CENTER" layoutX="400.0" layoutY="83.0" prefHeight="50.0" prefWidth="200.0" text="About The App" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="30.0" />
+   <Label fx:id="headerLbl" alignment="CENTER" layoutX="400.0" layoutY="83.0" prefHeight="50.0" prefWidth="200.0" text="About The App (v1.0.1)" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="30.0" />
    <TextArea fx:id="aboutAppTextArea" layoutX="101.0" layoutY="121.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="205.0" prefWidth="200.0" text="Stuff To Do is an application developed for people who are focused on getting things done and boosting their &#10;work life with a computer! Use this app to plan your daily, weekly and monthly goals and make your days &#10;as productive as they can get!!&#10;&#10;The application is open-source and was developed by a single developer who loves building things and getting &#10;work done! &#10;&#10;Check out this app's public repository            . &#10;:)" AnchorPane.leftAnchor="101.0" AnchorPane.rightAnchor="99.0" AnchorPane.topAnchor="115.0" />
    <Hyperlink fx:id="hyperlink" layoutX="363.0" layoutY="262.0" text="here">
       <font>

@@ -26,8 +26,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="taskDetailsRoot" minWidth="100.0" prefHeight="550.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SideTaskDetailsController">
-         <VBox fx:id="mainVbox" alignment="TOP_CENTER" prefHeight="510.0" prefWidth="230.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+<AnchorPane fx:id="taskDetailsRoot" minWidth="-Infinity" prefHeight="550.0" prefWidth="245.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SideTaskDetailsController">
+         <VBox fx:id="mainVbox" alignment="TOP_CENTER" prefHeight="510.0" prefWidth="230.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
       <TextArea fx:id="taskTextArea" prefHeight="100.0" prefWidth="215.0" />
             <HBox fx:id="hbox1" alignment="CENTER" prefHeight="40.0" prefWidth="200.0">
                <Label prefHeight="25.0" prefWidth="105.0" text="Due Date">

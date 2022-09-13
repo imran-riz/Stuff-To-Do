@@ -23,7 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import models.Task;
+import models.TaskToDo;
 import util.IdGenerator;
 import util.TaskCollection;
 import values.Repeat;
@@ -31,7 +31,6 @@ import values.Repeat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 
 public class SideTaskDetailsController {
@@ -50,10 +49,10 @@ public class SideTaskDetailsController {
     private final ObservableList<String> minutesList = FXCollections.observableArrayList();
     private final ObservableList<String> dayPeriodsList = FXCollections.observableArrayList();
 
-    private Task task;
+    private TaskToDo taskToDo;
 
-    public void initialize(Task task) {
-        if (this.task != null) {
+    public void initialize(TaskToDo taskToDo) {
+        if (this.taskToDo != null) {
             System.out.println("\nERROR: SideTaskDetailsController.initialize() -> The model Task can only be set once!");
         }
         else {
@@ -72,18 +71,18 @@ public class SideTaskDetailsController {
             this.taskDueDatePicker.setEditable(false);
             this.taskReminderDatePicker.setEditable(false);
 
-            this.task = task;
+            this.taskToDo = taskToDo;
 
-            String reminderTime = this.task.getReminderTime().format(DateTimeFormatter.ofPattern("hh:mm a"));
+            String reminderTime = this.taskToDo.getReminderTime().format(DateTimeFormatter.ofPattern("hh:mm a"));
 
-            this.taskTextArea.setText(this.task.getText());
-            this.taskDueDatePicker.setValue(this.task.getDueDate());
-            this.repeatComboBox.setValue(this.task.getRepeat());
-            this.taskReminderDatePicker.setValue(this.task.getReminderDate());
+            this.taskTextArea.setText(this.taskToDo.getText());
+            this.taskDueDatePicker.setValue(this.taskToDo.getDueDate());
+            this.repeatComboBox.setValue(this.taskToDo.getRepeat());
+            this.taskReminderDatePicker.setValue(this.taskToDo.getReminderDate());
             this.hrChoiceBox.setValue(reminderTime.substring(0, 2));
             this.minChoiceBox.setValue(reminderTime.substring(3, 5));
             this.dayPeriodChoiceBox.setValue(reminderTime.substring(6, 8).toUpperCase());
-            this.notesTextArea.setText(this.task.getNotes());
+            this.notesTextArea.setText(this.taskToDo.getNotes());
 
             this.taskTextArea.setId("taskTextArea");
             this.vbox1.setId("miniContentBox") ;
@@ -147,14 +146,14 @@ public class SideTaskDetailsController {
 
 
         // compare the details from the side view to the existing data of a Task, if they vary update the Task and other repeated Tasks
-        if (!taskTextArea.equalsIgnoreCase(this.task.getText()) || !dueDate.equals(this.task.getDueDate()) || repeat != this.task.getRepeat() || !reminderDate.equals(this.task.getReminderDate()) || !reminderTime.equals(this.task.getReminderTime()) || !notes.equalsIgnoreCase(this.task.getNotes())) {
-            this.task.setId(IdGenerator.generateNewId());
-            this.task.setText(taskTextArea);
-            this.task.setDueDate(dueDate);
-            this.task.setRepeat(repeat);
-            this.task.setReminderDate(reminderDate);
-            this.task.setReminderTime(reminderTime);
-            this.task.setNotes(notes);
+        if (!taskTextArea.equalsIgnoreCase(this.taskToDo.getText()) || !dueDate.equals(this.taskToDo.getDueDate()) || repeat != this.taskToDo.getRepeat() || !reminderDate.equals(this.taskToDo.getReminderDate()) || !reminderTime.equals(this.taskToDo.getReminderTime()) || !notes.equalsIgnoreCase(this.taskToDo.getNotes())) {
+            this.taskToDo.setId(IdGenerator.generateNewId());
+            this.taskToDo.setText(taskTextArea);
+            this.taskToDo.setDueDate(dueDate);
+            this.taskToDo.setRepeat(repeat);
+            this.taskToDo.setReminderDate(reminderDate);
+            this.taskToDo.setReminderTime(reminderTime);
+            this.taskToDo.setNotes(notes);
 
             TaskCollection.getInstance().storeTasksToFile();
             HomePageController.loadTasksToListView();

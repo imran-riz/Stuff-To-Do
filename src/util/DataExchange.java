@@ -17,7 +17,7 @@
 
 package util;
 
-import models.Task;
+import models.TaskToDo;
 import values.Repeat;
 
 import java.io.*;
@@ -28,20 +28,20 @@ import java.util.List;
 
 public class DataExchange {
 
-    public static void writeToFile(String pathToFile, List<Task> listOfTasks) throws IOException {
+    public static void writeToFile(String pathToFile, List<TaskToDo> listOfTasks) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(pathToFile) ;
 
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream) ;
 
-        for (Task task: listOfTasks) {
-            objectOutputStream.writeObject(task.getId());
-            objectOutputStream.writeObject(task.getText()) ;
-            objectOutputStream.writeObject(task.getCompleted()) ;
-            objectOutputStream.writeObject(task.getDueDate()) ;
-            objectOutputStream.writeObject(task.getReminderDate()) ;
-            objectOutputStream.writeObject(task.getReminderTime()) ;
-            objectOutputStream.writeObject(task.getRepeat());
-            objectOutputStream.writeObject(task.getNotes());
+        for (TaskToDo taskToDo : listOfTasks) {
+            objectOutputStream.writeObject(taskToDo.getId());
+            objectOutputStream.writeObject(taskToDo.getText()) ;
+            objectOutputStream.writeObject(taskToDo.getCompleted()) ;
+            objectOutputStream.writeObject(taskToDo.getDueDate()) ;
+            objectOutputStream.writeObject(taskToDo.getReminderDate()) ;
+            objectOutputStream.writeObject(taskToDo.getReminderTime()) ;
+            objectOutputStream.writeObject(taskToDo.getRepeat());
+            objectOutputStream.writeObject(taskToDo.getNotes());
         }
 
         objectOutputStream.close() ;
@@ -49,8 +49,8 @@ public class DataExchange {
     }
 
 
-    public static List<Task> readFromFile(String pathToFile) throws Exception {
-        List<Task> listOfTasks = new ArrayList<>() ;
+    public static List<TaskToDo> readFromFile(String pathToFile) throws Exception {
+        List<TaskToDo> listOfTasks = new ArrayList<>() ;
 
         try {
             FileInputStream fileInputStream = new FileInputStream(pathToFile) ;
@@ -66,9 +66,9 @@ public class DataExchange {
                 Repeat taskRepeat = ((Repeat) objectInputStream.readObject());
                 String taskNotes = ((String) objectInputStream.readObject());
 
-                Task task = new Task(taskId, taskText, taskCompleted, taskDueDate, taskReminderDate, taskReminderTime, taskRepeat, taskNotes) ;
+                TaskToDo taskToDo = new TaskToDo(taskId, taskText, taskCompleted, taskDueDate, taskReminderDate, taskReminderTime, taskRepeat, taskNotes) ;
 
-                listOfTasks.add(task) ;
+                listOfTasks.add(taskToDo) ;
             }
         }
         catch (EOFException eofException) {

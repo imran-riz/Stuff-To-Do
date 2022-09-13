@@ -19,12 +19,13 @@ package controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-
-import models.Task;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import models.TaskToDo;
 import util.IdGenerator;
 import util.TaskCollection;
 import values.Repeat;
@@ -35,7 +36,8 @@ import java.time.LocalTime;
 
 public class NewTaskFormController {
 
-    public AnchorPane newTaskRoot;
+    public FlowPane root ;
+    public HBox hbox1, hbox2, hbox3, hbox4, hbox5;
     public TextField newTaskTextFld;
     public DatePicker reminderDatePicker, dueDatePicker;
     public ComboBox<String> reminderHr, reminderMin, reminderDayPeriod;
@@ -72,7 +74,7 @@ public class NewTaskFormController {
         this.imageView.setFitHeight(20);
         this.addNewTaskBtn.setGraphic(this.imageView);
 
-        this.newTaskRoot.setId("newTaskRoot");
+        this.root.setId("newTaskRoot");
         this.newTaskTextFld.setId("newTaskTxtFld");
         this.addNewTaskBtn.setId("addTaskBtn");
     }
@@ -137,10 +139,10 @@ public class NewTaskFormController {
                 hours = 0 ;
             }
 
-            Task task = new Task(taskId, taskText, false, taskDueDate, taskReminderDate, LocalTime.of(hours, minutes), taskRepeat, "");
-            TaskCollection.getInstance().addTask(task);
+            TaskToDo taskToDo = new TaskToDo(taskId, taskText, false, taskDueDate, taskReminderDate, LocalTime.of(hours, minutes), taskRepeat, "");
+            TaskCollection.getInstance().addTask(taskToDo);
 
-            HomePageController.addNewTask(task);
+            HomePageController.addNewTask(taskToDo);
             System.out.println("\nINFO: New task created! Id for " + taskText + " : " +  taskId);
 
             this.newTaskTextFld.setText("");

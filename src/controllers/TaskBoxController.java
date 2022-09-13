@@ -21,66 +21,78 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import models.Task;
+import models.TaskToDo;
 import util.TaskCollection;
 import values.HomePageHeaders;
+import values.Repeat;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class TaskBoxController {
     public AnchorPane taskBoxRoot ;
+    public HBox hbox1, hbox2, hbox3;
     public CheckBox completedCheckBox ;
-    public Label textLbl, dueDateLbl ;
+    public Label textLbl, dueDateLbl, reminderTimeLbl, repeatLbl ;
     public Button deleteBtn ;
     public Line line ;
+    public ImageView calendarImgView, notificationImgView, eventRepeatImgView ;
 
     private final Label idLbl = new Label();
     private final ImageView imageView = new ImageView(new Image("/resources/images/delete_icon.png")) ;
 
 
-    private Task task ;
+    private TaskToDo taskToDo;
 
 
-    public void initialize(Task task) {
-        if (this.task != null) {
+    public void initialize(TaskToDo taskToDo) {
+        this.calendarImgView.setImage(new Image("/resources/images/calendar_icon.png"));
+        this.notificationImgView.setImage(new Image("/resources/images/notification_icon.png"));
+        this.eventRepeatImgView.setImage(new Image("/resources/images/event_repeat_icon.png"));
+
+        if (this.taskToDo != null) {
             throw new IllegalStateException("\nERROR: TaskBoxController.initModel() -> The model can only be initialized once") ;
         }
         else {
-            this.task = task ;
+            this.taskToDo = taskToDo;
 
-            this.idLbl.setText(this.task.getId());
+            this.idLbl.setText(this.taskToDo.getId());
             this.idLbl.setVisible(false) ;
             this.taskBoxRoot.getChildren().add(0, this.idLbl) ;
 
             this.textLbl.setWrapText(false);
-            this.textLbl.textProperty().bind(this.task.getTaskTextStringProperty());
-            this.dueDateLbl.textProperty().bind(this.task.getDueDateStringProperty());
 
-            this.completedCheckBox.setSelected(this.task.getCompleted()) ;
+            this.textLbl.textProperty().bind(this.taskToDo.getTaskTextStringProperty());
+            this.dueDateLbl.textProperty().bind(this.taskToDo.getDueDateStringProperty());
+            this.reminderTimeLbl.textProperty().bind(this.taskToDo.getReminderTimeStringProperty());
+            this.repeatLbl.textProperty().bind(this.taskToDo.getRepeatStringProperty());
+
+            this.completedCheckBox.setSelected(this.taskToDo.getCompleted()) ;
             this.completedCheckBox.setOnAction(e -> {
                 boolean selected = this.completedCheckBox.isSelected() ;
 
-                this.task.setCompleted(selected);
+                this.taskToDo.setCompleted(selected);
                 this.line.setVisible(selected);
 
                 TaskCollection.getInstance().storeTasksToFile();
 
                 if (selected) {
                     if (HomePageController.headerStrProperty.getValue().equals(HomePageHeaders.PLANNED_TASKS)) {
-                        if (this.task.getDueDate().isBefore(LocalDate.now())) {
-                            HomePageController.removeTaskBox(this.taskBoxRoot, this.task);
+                        if (this.taskToDo.getDueDate().isBefore(LocalDate.now())) {
+                            HomePageController.removeTaskBox(this.taskBoxRoot, this.taskToDo);
                         }
                     }
                 }
                 else {
                     if (HomePageController.headerStrProperty.getValue().equals(HomePageHeaders.COMPLETED_TASKS)) {
-                        HomePageController.removeTaskBox(this.taskBoxRoot, this.task);
-                        HomePageController.addNewTask(this.task);
+                        HomePageController.removeTaskBox(this.taskBoxRoot, this.taskToDo);
+                        HomePageController.addNewTask(this.taskToDo);
                     }
                 }
             });
@@ -90,17 +102,23 @@ public class TaskBoxController {
 
             this.textLbl.widthProperty().addListener((obs, oldVal, newVal) -> this.line.setStartX(newVal.doubleValue()));
 
-            this.line.setVisible(this.task.getCompleted());
+            this.line.setVisible(this.taskToDo.getCompleted());
+
+            if (this.taskToDo.getRepeat().equals(Repeat.NONE)) {
+                this.hbox3.setVisible(false);
+            }
 
             this.taskBoxRoot.setId("taskBoxRoot");
             this.textLbl.setId("taskText");
-            this.dueDateLbl.setId("dueDate");
+            this.dueDateLbl.setId("taskDueDateText");
+            this.reminderTimeLbl.setId("taskReminderText");
+            this.repeatLbl.setId("taskRepeatText");
         }
     }
 
 
     public void delete() {
-        List<Task> listOfSameTaskRepeated = TaskCollection.getInstance().getAllTasksThatRepeat(this.task);
+        List<TaskToDo> listOfSameTaskRepeated = TaskCollection.getInstance().getAllTasksThatRepeat(this.taskToDo);
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION) ;
         alert.setTitle("Delete Task");
@@ -112,17 +130,17 @@ public class TaskBoxController {
 
         if (result.isPresent() && result.get() == ButtonType.YES) {
             if (listOfSameTaskRepeated.size() == 1) {
-                TaskCollection.getInstance().removeTask(this.task);
-                System.out.println("\nINFO: Deleted! " + this.task.getText() + " - " + this.task.getId());
+                TaskCollection.getInstance().removeTask(this.taskToDo);
+                System.out.println("\nINFO: Deleted! " + this.taskToDo.getText() + " - " + this.taskToDo.getId());
             }
             else {
                 listOfSameTaskRepeated = listOfSameTaskRepeated.stream()
-                        .filter(t -> t.getDueDate().equals(this.task.getDueDate()) || t.getDueDate().isAfter(this.task.getDueDate()))
-                        .toList();
+                        .filter(t -> t.getDueDate().equals(this.taskToDo.getDueDate()) || t.getDueDate().isAfter(this.taskToDo.getDueDate()))
+                        .collect(Collectors.toList());
 
-                for (Task t : listOfSameTaskRepeated) {
+                for (TaskToDo t : listOfSameTaskRepeated) {
                     TaskCollection.getInstance().removeTask(t);
-                    System.out.println("\nINFO: Deleted! " + this.task.getText() + " - " + this.task.getId());
+                    System.out.println("\nINFO: Deleted! " + this.taskToDo.getText() + " - " + this.taskToDo.getId());
                 }
             }
 

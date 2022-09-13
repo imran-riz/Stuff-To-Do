@@ -24,7 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import models.Page;
-import models.Task;
+import models.TaskToDo;
 import util.IdGenerator;
 import util.PageNavigator;
 import util.TaskCollection;
@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class Main extends Application {
@@ -46,17 +47,17 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        stage.setTitle("S T U F F   T O   D O");
+        stage.setTitle("Stuff To Do 1.0.1");
         stage.getIcons().add(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/resources/images/app_logo.png"))));
-        stage.setResizable(false);
+
         stage.setOnCloseRequest(e -> {
             if (!TaskCollection.getInstance().getAllTasks().isEmpty()) {
-                List<Task> tasksToday = TaskCollection.getInstance().getAllTasks().stream()
+                List<TaskToDo> tasksToday = TaskCollection.getInstance().getAllTasks().stream()
                                                                                   .filter(task -> task.getDueDate().equals(LocalDate.now()))
-                                                                                  .toList() ;
+                                                                                  .collect(Collectors.toList()) ;
 
-                for (Task task: tasksToday) {
-                    task.cancelReminderAlert();
+                for (TaskToDo taskToDo : tasksToday) {
+                    taskToDo.cancelReminderAlert();
                 }
             }
 
@@ -70,6 +71,8 @@ public class Main extends Application {
         PageNavigator.activatePage("HomePage");
 
         stage.setScene(scene);
+        stage.setMinWidth(1055);
+        stage.setMinHeight(700);
         stage.show();
     }
 
@@ -86,39 +89,37 @@ public class Main extends Application {
 
 
     private static void checkForRepeatingTasks() {
-        List<Task> taskList = TaskCollection.getInstance().getAllTasks().stream()
+        List<TaskToDo> taskList = TaskCollection.getInstance().getAllTasks().stream()
                                 .filter(task -> !task.getRepeat().equals(Repeat.NONE) && task.getDueDate().isBefore(LocalDate.now()) && !task.getCompleted())
-                                .toList();
+                                .collect(Collectors.toList());
 
-        for (Task task: taskList) {
-            Task newTask, lastOccurrenceOfTask ;
+        for (TaskToDo taskToDo : taskList) {
+            TaskToDo newTaskToDo, lastOccurrenceOfTask ;
             String newTaskID ;
             LocalDate newTaskDue = LocalDate.now();
             LocalDate newTaskReminder = LocalDate.now();
 
-            List<Task> listOfSameTask = TaskCollection.getInstance().getAllTasksThatRepeat(task) ;
+            List<TaskToDo> listOfSameTask = TaskCollection.getInstance().getAllTasksThatRepeat(taskToDo) ;
 
             lastOccurrenceOfTask = listOfSameTask.get(listOfSameTask.size()-1) ;
-
-            System.out.println(lastOccurrenceOfTask.getId());
 
             if (!lastOccurrenceOfTask.getDueDate().equals(LocalDate.now())) {
                 newTaskID = IdGenerator.generateIdForRepeatedTask(lastOccurrenceOfTask) ;
 
-                if (task.getRepeat().equals(Repeat.DAILY)) {
-                    newTask = new Task(newTaskID, task.getText(), false, newTaskDue, newTaskReminder, task.getReminderTime(), task.getRepeat(), task.getNotes());
-                    TaskCollection.getInstance().addTask(newTask);
+                if (taskToDo.getRepeat().equals(Repeat.DAILY)) {
+                    newTaskToDo = new TaskToDo(newTaskID, taskToDo.getText(), false, newTaskDue, newTaskReminder, taskToDo.getReminderTime(), taskToDo.getRepeat(), taskToDo.getNotes());
+                    TaskCollection.getInstance().addTask(newTaskToDo);
                 }
-                else if (task.getRepeat().equals(Repeat.WEEKLY)) {
-                    if (newTaskDue.getDayOfWeek().equals(task.getDueDate().getDayOfWeek())) {
-                        newTask = new Task(newTaskID, task.getText(), false, newTaskDue, newTaskReminder, task.getReminderTime(), task.getRepeat(), task.getNotes());
-                        TaskCollection.getInstance().addTask(newTask);
+                else if (taskToDo.getRepeat().equals(Repeat.WEEKLY)) {
+                    if (newTaskDue.getDayOfWeek().equals(taskToDo.getDueDate().getDayOfWeek())) {
+                        newTaskToDo = new TaskToDo(newTaskID, taskToDo.getText(), false, newTaskDue, newTaskReminder, taskToDo.getReminderTime(), taskToDo.getRepeat(), taskToDo.getNotes());
+                        TaskCollection.getInstance().addTask(newTaskToDo);
                     }
                 }
-                else if (task.getRepeat().equals(Repeat.MONTHLY)) {
-                    if (newTaskDue.getDayOfMonth() == task.getDueDate().getDayOfMonth()) {
-                        newTask = new Task(newTaskID, task.getText(), false, newTaskDue, newTaskReminder, task.getReminderTime(), task.getRepeat(), task.getNotes());
-                        TaskCollection.getInstance().addTask(newTask);
+                else if (taskToDo.getRepeat().equals(Repeat.MONTHLY)) {
+                    if (newTaskDue.getDayOfMonth() == taskToDo.getDueDate().getDayOfMonth()) {
+                        newTaskToDo = new TaskToDo(newTaskID, taskToDo.getText(), false, newTaskDue, newTaskReminder, taskToDo.getReminderTime(), taskToDo.getRepeat(), taskToDo.getNotes());
+                        TaskCollection.getInstance().addTask(newTaskToDo);
                     }
                 }
             }

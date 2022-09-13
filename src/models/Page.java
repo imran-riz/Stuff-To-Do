@@ -19,5 +19,20 @@ package models;
 
 import javafx.scene.layout.Pane;
 
-public record Page(Pane pane,
-                   String pathToStylesheet) {}
+public class Page {
+    private final Pane pane ;
+    private final String pathToStylesheet ;
+
+    public Page(Pane pane, String pathToStylesheet) {
+        this.pane = pane;
+        this.pathToStylesheet = pathToStylesheet ;
+    }
+
+    public Pane getPane() {
+        return pane;
+    }
+
+    public String getPathToStylesheet() {
+        return pathToStylesheet;
+    }
+}
